@@ -1,3 +1,7 @@
+"""
+    Script to test the GMAIL API
+"""
+
 import base64
 import datetime
 import httplib2
