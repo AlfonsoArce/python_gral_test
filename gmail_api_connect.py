@@ -1,5 +1,7 @@
 """
-    Script to connect to GMAIL using the API
+    Script to connect to GMAIL using the API.
+    This code should prompt a browser and a manual process of authorization should be done once
+    This code is based on google documentation. For more details look at https://developers.google.com/gmail/api/auth/about-auth
 """
 import datetime
 import httplib2
@@ -9,10 +11,9 @@ import time
 from apiclient import discovery
 from oauth2client import file, client, tools
 
-NEW_ORDERS_LABEL = 'Label_7015697172796597976'
-
 
 def get_credentials(client_secret_file, scopes):
+    """ Function to read the credential from the disk if you already has one """
     cwd_dir = os.getcwd()
     credential_dir = os.path.join(cwd_dir, 'infrastructure')
     if not os.path.exists(credential_dir):
@@ -31,6 +32,7 @@ def get_credentials(client_secret_file, scopes):
 
 
 def build_service(credentials):
+    """ Function to build the API service """
     http = httplib2.Http()
     http = credentials.authorize(http)
 
@@ -41,7 +43,10 @@ def connect_gmail():
     """
         Function to connect to GMAIL
     """
-    scopes = 'https://www.googleapis.com/auth/gmail.readonly'
+    scopes = ['https://www.googleapis.com/auth/gmail.readonly',
+              'https://www.googleapis.com/auth/gmail.modify',
+              'https://www.googleapis.com/auth/gmail.labels']
+
     cwd_dir = os.getcwd()
     # All the keys to connect to the API are under ./infrastructure
     client_secret_dir = os.path.join(cwd_dir, 'infrastructure')
@@ -56,6 +61,7 @@ def main():
     start = time.time()
     print(f"Execution start: {datetime.datetime.now()}")
     service = connect_gmail()
+    # This should return a googleapiclient.discovery.Resource object
     print(service)
     print(f"Execution took: {time.time() - start}")
 
